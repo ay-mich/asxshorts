@@ -1,0 +1,243 @@
+[project]
+name = "asxshorts"
+version = "0.1.0"
+description = "Lightweight Python client to download official ASX short position daily CSVs with local caching"
+readme = "README.md"
+license = { text = "MIT" }
+authors = [
+    { name = "ay-mich", email = "aydenmich@gmail.com" }
+]
+maintainers = [
+    { name = "ay-mich", email = "aydenmich@gmail.com" }
+]
+requires-python = ">=3.11"
+keywords = ["asx", "short-selling", "finance", "data", "csv", "australia"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Financial and Insurance Industry",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Office/Business :: Financial",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Typing :: Typed",
+]
+dependencies = [
+    "requests>=2.32.0",
+    "python-dateutil>=2.9.0",
+    "pydantic>=2.0.0",
+    "pydantic-settings>=2.0.0",
+    "typer>=0.12.0",
+    "rich>=13.0.0",
+]
+
+[project.optional-dependencies]
+pandas = ["pandas>=2.0.0"]
+polars = ["polars>=1.0.0"]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-cov>=4.0.0",
+    "pytest-mock>=3.12.0",
+    "pytest-asyncio>=0.23.0",
+    "ruff>=0.6.0",
+    "mypy>=1.8.0",
+    "pre-commit>=3.6.0",
+    "build>=1.0.0",
+    "twine>=5.0.0",
+    "bandit>=1.7.5",
+    "safety>=2.3.5",
+    "commitizen>=3.13.0",
+    "pydocstyle>=6.3.0",
+    "types-requests>=2.32.0",
+    "types-python-dateutil>=2.9.0",
+    "bandit>=1.8.6",
+    "pip-audit>=2.9.0",
+    "pre-commit>=4.3.0",
+    "ruff>=0.14.1",
+    "twine>=6.2.0",
+    "vulture>=2.14",
+    "pdoc>=15.0.4",
+]
+docs = [
+    "mkdocs>=1.5.0",
+    "mkdocs-material>=9.5.0",
+    "mkdocstrings[python]>=0.24.0",
+]
+all = ["asxshorts[pandas,polars,dev,docs]"]
+
+[project.urls]
+Homepage = "https://github.com/ay-mich/asxshorts"
+Documentation = "https://ay-mich.github.io/asxshorts/asxshorts.html"
+Repository = "https://github.com/ay-mich/asxshorts"
+Issues = "https://github.com/ay-mich/asxshorts/issues"
+Changelog = "https://github.com/ay-mich/asxshorts/blob/main/CHANGELOG.md"
+
+[project.scripts]
+asxshorts = "asxshorts.cli:app"
+
+[build-system]
+requires = ["hatchling>=1.21.0"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/asxshorts"]
+# Ensure typing marker is included in wheels
+include = [
+  "src/asxshorts/py.typed",
+]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/src",
+    "/tests",
+    "/README.md",
+    "/LICENSE",
+    "/CHANGELOG.md",
+]
+
+# Ruff configuration
+[tool.ruff]
+target-version = "py311"
+line-length = 88
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "B",   # flake8-bugbear
+    "C4",  # flake8-comprehensions
+    "UP",  # pyupgrade
+    "ARG", # flake8-unused-arguments
+    "SIM", # flake8-simplify
+    "TCH", # flake8-type-checking
+    "PTH", # flake8-use-pathlib
+    "ERA", # eradicate
+    "RUF", # ruff-specific rules
+]
+ignore = [
+    "E501",   # line too long, handled by formatter
+    "PLR0913", # too many arguments
+    "PLR0912", # too many branches
+    "PLR2004", # magic value used in comparison
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*" = [
+  "PLR2004", "S101", "ARG", "FBT", "PLC0415",
+  # Relax formatting/lint noise in tests
+  "SIM117",  # nested with → combine
+  "PTH101", "PTH118", "PTH123",  # pathlib enforcement
+  "PTH110",
+  "F841",    # assigned but unused (common in tests)
+  "F811",    # redefinition in parametrized/dup tests
+  "RUF003",  # ambiguous unicode in comments
+  "RUF043",  # raw-string regex nit for pytest match
+  "E712",    # avoid == False checks in tests
+]
+"src/asxshorts/cli.py" = ["B008"]
+"src/asxshorts/client.py" = ["F401"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["asxshorts"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+
+# Pytest configuration
+[tool.pytest.ini_options]
+minversion = "8.0"
+addopts = [
+    "--strict-markers",
+    "--strict-config",
+    "--cov=asxshorts",
+    "--cov-report=term-missing",
+    "--cov-report=html",
+    "--cov-report=xml",
+    "--cov-fail-under=80",
+]
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "integration: marks tests as integration tests",
+    "unit: marks tests as unit tests",
+]
+
+[tool.coverage.run]
+source = ["src"]
+branch = true
+omit = [
+    "*/tests/*",
+    "*/test_*",
+    "*/__pycache__/*",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug:",
+    "if settings.DEBUG",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ == .__main__.:",
+    "class .*\\bProtocol\\):",
+    "@(abc\\.)?abstractmethod",
+]
+
+# MyPy configuration
+[tool.mypy]
+python_version = "3.11"
+# Start with a pragmatic baseline; we can ratchet up later.
+strict = false
+warn_unreachable = true
+pretty = true
+show_column_numbers = true
+show_error_codes = true
+show_error_context = true
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = [
+    "pandas.*",
+    "polars.*",
+]
+ignore_missing_imports = true
+
+# Bandit configuration
+[tool.bandit]
+exclude_dirs = ["tests", "venv", ".venv"]
+skips = ["B101"]  # Skip assert_used test
+
+# Commitizen configuration
+[tool.commitizen]
+name = "cz_conventional_commits"
+version = "0.1.0"
+tag_format = "v$version"
+version_files = [
+    "pyproject.toml:version",
+    "src/asxshorts/__init__.py:__version__",
+]
+
+# Pydocstyle configuration
+[tool.pydocstyle]
+convention = "google"
+add_ignore = ["D100", "D104", "D105", "D107"]
+
+[dependency-groups]
+dev = [
+    "pdoc>=15.0.4",
+]
