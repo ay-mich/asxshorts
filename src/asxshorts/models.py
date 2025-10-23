@@ -123,9 +123,13 @@ class ClientSettings(BaseSettings):
     timeout: float = Field(
         default=20.0, gt=0, le=300, description="Request timeout in seconds"
     )
-    retries: int = Field(default=3, ge=0, le=10, description="Number of retry attempts")
+    retries: int = Field(default=0, ge=0, le=10, description="Number of retry attempts")
     backoff: float = Field(
         default=0.5, gt=0, le=10, description="Exponential backoff base for retries"
+    )
+    http_adapter_retries: bool = Field(
+        default=True,
+        description="Enable urllib3 HTTPAdapter retry strategy at the session level.",
     )
 
     # Cache settings

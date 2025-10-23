@@ -80,14 +80,18 @@ class ShortsClient:
         )
 
         # Configure retry strategy
-        retry_strategy = Retry(
-            total=self.settings.retries,
-            status_forcelist=[429, 500, 502, 503, 504],
-            backoff_factor=self.settings.backoff,
-            allowed_methods=["HEAD", "GET", "OPTIONS"],
-        )
-
-        adapter = HTTPAdapter(max_retries=retry_strategy)
+        if self.settings.http_adapter_retries:
+            retry_strategy = Retry(
+                total=self.settings.retries,
+                status_forcelist=[429, 500, 502, 503, 504],
+                backoff_factor=self.settings.backoff,
+                allowed_methods=["HEAD", "GET", "OPTIONS"],
+            )
+            adapter = HTTPAdapter(max_retries=retry_strategy)
+        else:
+            # Disable adapter-level retries to avoid double backoff when using
+            # the client's explicit retry loop in _fetch_with_retry.
+            adapter = HTTPAdapter(max_retries=0)
         session.mount("http://", adapter)
         session.mount("https://", adapter)
 
