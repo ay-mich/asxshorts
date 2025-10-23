@@ -6,6 +6,8 @@
 
 Lightweight Python client to download official ASIC short position daily CSVs across a date range, with local caching.
 
+👉 Examples: [asxshorts-examples](https://github.com/ay-mich/asxshorts-examples)
+
 ## Features
 
 - 🚀 **Simple API**: Fetch short selling data with just a few lines of code
