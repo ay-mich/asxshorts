@@ -33,3 +33,15 @@ updates:
     labels:
       - "dependencies"
       - "github-actions"
+    # Reduce noise: group action bumps and ignore major updates by default
+    groups:
+      gha-minor-patch:
+        patterns:
+          - "actions/*"
+        update-types:
+          - "minor"
+          - "patch"
+    ignore:
+      - dependency-name: "actions/*"
+        update-types:
+          - "version-update:semver-major"

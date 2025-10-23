@@ -42,7 +42,7 @@ Set up a Trusted Publisher for both TestPyPI and PyPI.
 
 ### Continuous Integration (ci.yml)
 
-- Trigger: push and pull_request to `main`.
+- Trigger: push and pull_request to `main` (only when code/packaging files change).
 - Jobs:
   - Lint: `ruff format --check` and `ruff check` over `src/` and `tests/`.
   - Tests: `pytest` with coverage.
@@ -158,7 +158,7 @@ What happens after successful tag push:
 
 ## API documentation (docs.yml)
 
-- Trigger: push to `main`.
+- Trigger: push to `main` when code changes (or the workflow file itself changes).
 - The workflow builds API docs with `pdoc` into the `site/` directory and deploys to GitHub Pages.
 - `site/` is ignored by git and should not be committed; the workflow uploads and deploys it.
 - You can preview locally with:
@@ -173,6 +173,12 @@ What happens after successful tag push:
 
 - If you use branch protection, set the required status check to the CI job name: `CI / test`.
 - Configure this in GitHub repo settings → Branches → Branch protection rules.
+
+## Dependabot noise reduction
+
+- Dependabot is configured to run weekly.
+- GitHub Actions bumps are grouped (minor/patch) and major updates are ignored by default to reduce PR noise.
+- Security updates for Actions may still appear; you can handle those manually when relevant.
 
 Post-release verification (after CI completes):
 
