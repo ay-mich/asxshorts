@@ -1,6 +1,6 @@
 """ASX Shorts - Fetch official ASX short selling data with local caching."""
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 from .client import ShortsClient
 from .errors import (

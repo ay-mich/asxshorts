@@ -1,6 +1,6 @@
 [project]
 name = "asxshorts"
-version = "0.1.0"
+version = "0.1.1"
 description = "Lightweight Python client to download official ASX short position daily CSVs with local caching"
 readme = "README.md"
 license = { text = "MIT" }
