@@ -5,10 +5,10 @@ description = "Lightweight Python client to download official ASX short position
 readme = "README.md"
 license = { text = "MIT" }
 authors = [
-    { name = "ay-mich", email = "aydenmich@gmail.com" }
+    { name = "ay-mich"}
 ]
 maintainers = [
-    { name = "ay-mich", email = "aydenmich@gmail.com" }
+    { name = "ay-mich"}
 ]
 requires-python = ">=3.11"
 keywords = ["asx", "short-selling", "finance", "data", "csv", "australia"]

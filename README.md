@@ -3,7 +3,6 @@
 [![PyPI version](https://badge.fury.io/py/asxshorts.svg)](https://badge.fury.io/py/asxshorts)
 [![Python versions](https://img.shields.io/pypi/pyversions/asxshorts.svg)](https://pypi.org/project/asxshorts/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![CI](https://github.com/ay-mich/asxshorts/workflows/CI/badge.svg)](https://github.com/ay-mich/asxshorts/actions)
 
 Lightweight Python client to download official ASIC short position daily CSVs across a date range, with local caching.
 
