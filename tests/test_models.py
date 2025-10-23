@@ -137,7 +137,7 @@ class TestClientSettings:
         assert settings.base_url == "https://download.asic.gov.au"
         assert "asxshorts" in settings.user_agent
         assert settings.timeout == 20.0
-        assert settings.retries == 3
+        assert settings.retries == 0
         assert settings.backoff == 0.5
         assert settings.max_cache_age_days == 30
         assert settings.cache_lock_timeout == 30.0

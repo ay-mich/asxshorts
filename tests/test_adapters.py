@@ -349,10 +349,18 @@ class TestPolarsAdapter:
         mock_df.with_columns.return_value = mock_df_with_columns
 
         # Mock polars column operations
-        mock_pl.col.return_value.str.to_date.return_value = "date_col"
-        mock_pl.col.return_value.cast.return_value = "cast_col"
+        expr = Mock()
+        expr.str.to_date.return_value = "date_col"
+        expr_after_cast = Mock()
+        expr.cast.return_value = expr_after_cast
+        expr_after_cast.dt.date.return_value = "report_date_col"
+        mock_pl.col.return_value = expr
+        mock_pl.Datetime = Mock(return_value="ms_dt")
         mock_pl.Int64 = "Int64"
         mock_pl.Float64 = "Float64"
+        # Ensure df.schema supports subscription
+        mock_pl.Date = "Date"
+        mock_df.schema = {"report_date": "Utf8"}
 
         self.mock_client.fetch_day.return_value = self.sample_fetch_result
 
@@ -392,10 +400,17 @@ class TestPolarsAdapter:
         mock_df.with_columns.return_value = mock_df_with_columns
 
         # Mock polars column operations
-        mock_pl.col.return_value.str.to_date.return_value = "date_col"
-        mock_pl.col.return_value.cast.return_value = "cast_col"
+        expr = Mock()
+        expr.str.to_date.return_value = "date_col"
+        expr_after_cast = Mock()
+        expr.cast.return_value = expr_after_cast
+        expr_after_cast.dt.date.return_value = "report_date_col"
+        mock_pl.col.return_value = expr
+        mock_pl.Datetime = Mock(return_value="ms_dt")
         mock_pl.Int64 = "Int64"
         mock_pl.Float64 = "Float64"
+        mock_pl.Date = "Date"
+        mock_df.schema = {"report_date": "Utf8"}
 
         self.mock_client.fetch_day.return_value = self.sample_fetch_result
 
@@ -442,10 +457,17 @@ class TestPolarsAdapter:
         mock_df.with_columns.return_value = mock_df_with_columns
 
         # Mock polars column operations
-        mock_pl.col.return_value.str.to_date.return_value = "date_col"
-        mock_pl.col.return_value.cast.return_value = "cast_col"
+        expr = Mock()
+        expr.str.to_date.return_value = "date_col"
+        expr_after_cast = Mock()
+        expr.cast.return_value = expr_after_cast
+        expr_after_cast.dt.date.return_value = "report_date_col"
+        mock_pl.col.return_value = expr
+        mock_pl.Datetime = Mock(return_value="ms_dt")
         mock_pl.Int64 = "Int64"
         mock_pl.Float64 = "Float64"
+        mock_pl.Date = "Date"
+        mock_df.schema = {"report_date": "Utf8"}
 
         self.mock_client.fetch_range.return_value = range_result
 
@@ -503,10 +525,22 @@ class TestPolarsAdapter:
         mock_df.with_columns.return_value = mock_df_with_columns
 
         # Mock polars column operations
-        mock_pl.col.return_value.str.to_date.return_value = "date_col"
-        mock_pl.col.return_value.cast.return_value = "cast_col"
+        expr = Mock()
+        expr.str.to_date.return_value = "date_col"
+        expr_after_cast = Mock()
+        expr.cast.return_value = expr_after_cast
+        expr_after_cast.dt.date.return_value = "report_date_col"
+        mock_pl.col.return_value = expr
+        mock_pl.Datetime = Mock(return_value="ms_dt")
         mock_pl.Int64 = "Int64"
         mock_pl.Float64 = "Float64"
+        mock_pl.Date = "Date"
+        mock_df.schema = {
+            "date": "Utf8",
+            "short_qty": "Int64",
+            "total_qty": "Int64",
+            "short_pct": "Float64",
+        }
 
         with patch("asxshorts.adapters.pl", mock_pl):
             adapter = PolarsAdapter(self.mock_client)
@@ -684,10 +718,17 @@ class TestAdapterIntegration:
         mock_df.with_columns.return_value = mock_df_with_columns
 
         # Mock polars column operations
-        mock_pl.col.return_value.str.to_date.return_value = "date_col"
-        mock_pl.col.return_value.cast.return_value = "cast_col"
+        expr = Mock()
+        expr.str.to_date.return_value = "date_col"
+        expr_after_cast = Mock()
+        expr.cast.return_value = expr_after_cast
+        expr_after_cast.dt.date.return_value = "report_date_col"
+        mock_pl.col.return_value = expr
+        mock_pl.Datetime = Mock(return_value="ms_dt")
         mock_pl.Int64 = "Int64"
         mock_pl.Float64 = "Float64"
+        mock_pl.Date = "Date"
+        mock_df.schema = {"report_date": "Utf8"}
 
         with patch("asxshorts.adapters.pl", mock_pl):
             adapter = PolarsAdapter(mock_client)

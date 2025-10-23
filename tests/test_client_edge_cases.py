@@ -404,6 +404,31 @@ def test_session_retry_configuration():
                         assert mock_session.mount.call_count == 2
 
 
+def test_create_session_without_http_adapter_retry():
+    """Session can disable adapter-level retries via settings."""
+    with patch("asxshorts.client.CacheManager"):
+        with patch("asxshorts.client.DefaultResolver"):
+            settings = ClientSettings(
+                retries=3, backoff=0.5, http_adapter_retries=False
+            )
+
+            with patch("requests.Session") as mock_session_class:
+                with patch("asxshorts.client.HTTPAdapter") as mock_adapter_class:
+                    with patch("asxshorts.client.Retry") as mock_retry_class:
+                        mock_session = Mock()
+                        mock_session_class.return_value = mock_session
+
+                        _ = ShortsClient(settings=settings)
+
+                        # Retry() should not be constructed when disabled
+                        mock_retry_class.assert_not_called()
+                        # HTTPAdapter should be created with max_retries=0
+                        assert mock_adapter_class.call_count == 1
+                        kwargs = mock_adapter_class.call_args.kwargs
+                        assert kwargs.get("max_retries") == 0
+                        assert mock_session.mount.call_count == 2
+
+
 def test_fetch_with_retry_http_error_response(mock_session, mock_resolver):
     """Test fetch with retry when response raises HTTP error."""
     mock_response = Mock()

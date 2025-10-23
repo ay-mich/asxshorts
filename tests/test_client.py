@@ -26,7 +26,7 @@ class TestShortsClient:
         client = ShortsClient()
         assert client.settings.base_url == "https://download.asic.gov.au"
         assert client.settings.timeout == 20.0
-        assert client.settings.retries == 3
+        assert client.settings.retries == 0
         assert client.cache is not None
         assert client.session is not None
         assert client.resolver is not None
