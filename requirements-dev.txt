@@ -339,9 +339,9 @@ cryptography==46.0.3 \
     # via
     #   authlib
     #   secretstorage
-cyclonedx-python-lib==9.1.0 \
-    --hash=sha256:55693fca8edaecc3363b24af14e82cc6e659eb1e8353e58b587c42652ce0fb52 \
-    --hash=sha256:86935f2c88a7b47a529b93c724dbd3e903bc573f6f8bd977628a7ca1b5dadea1
+cyclonedx-python-lib==11.5.0 \
+    --hash=sha256:175819663ae5a3c9930462ebcbddd6abb3ad5f237e12a503dbd0af320a9c5b96 \
+    --hash=sha256:5cca5b444421d39a83b45fcab24ed3e90cafaca97b89fc45cb10d2516bd2d79d
     # via pip-audit
 decli==0.6.3 \
     --hash=sha256:5152347c7bb8e3114ad65db719e5709b28d7f7f45bdb709f70167925e55640f3 \
