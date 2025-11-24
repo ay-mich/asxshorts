@@ -197,9 +197,9 @@ colorama==0.4.6 \
     #   commitizen
     #   pytest
     #   tqdm
-commitizen==4.9.1 \
-    --hash=sha256:4241b2ecae97b8109af8e587c36bc3b805a09b9a311084d159098e12d6ead497 \
-    --hash=sha256:b076b24657718f7a35b1068f2083bd39b4065d250164a1398d1dac235c51753b
+commitizen==4.10.0 \
+    --hash=sha256:3fe56c168b30b30b84b8329cba6b132e77b4eb304a5460bbe2186aad0f78c966 \
+    --hash=sha256:cc58067403b9eff21d0423b3d9a29bda05254bd51ad5bdd1fd0594bff31277e1
     # via asxshorts
 coverage==7.11.0 \
     --hash=sha256:037b2d064c2f8cc8716fe4d39cb705779af3fbf1ba318dc96a1af858888c7bb5 \
