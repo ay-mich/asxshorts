@@ -523,9 +523,9 @@ markupsafe==3.0.3 \
     # via
     #   jinja2
     #   pdoc
-marshmallow==4.0.1 \
-    --hash=sha256:72f14ef346f81269dbddee891bac547dda1501e9e08b6a809756ea3dbb7936a1 \
-    --hash=sha256:e1d860bd262737cb2d34e1541b84cb52c32c72c9474e3fe6f30f137ef8b0d97f
+marshmallow==4.1.0 \
+    --hash=sha256:9901660499be3b880dc92d6b5ee0b9a79e94265b7793f71021f92040c07129f1 \
+    --hash=sha256:daa9862f74e2f7864980d25c29b4ea72944cde48aa17537e3bd5797a4ae62d71
     # via safety
 mdurl==0.1.2 \
     --hash=sha256:84008a41e51615a49fc9966191ff91509e3c40b939176e643fd50a5c2196b8f8 \
