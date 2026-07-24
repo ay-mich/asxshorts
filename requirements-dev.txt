@@ -1134,9 +1134,9 @@ ruff==0.14.4 \
     --hash=sha256:f5e649052a294fe00818650712083cddc6cc02744afaf37202c65df9ea52efa5 \
     --hash=sha256:f911bba769e4a9f51af6e70037bb72b70b45a16db5ce73e1f72aefe6f6d62132
     # via asxshorts
-safety==3.6.2 \
-    --hash=sha256:2e148cd9a4ad2e387d2c142878b7b5a3a9cb9e6538167043faa1ba7023a032be \
-    --hash=sha256:754f8d6068d1504503b0346cbd3cb0e67015d2abc1d842f3a4e4b662cb4f44ec
+safety==3.8.1 \
+    --hash=sha256:953c1c3c60c873f53a6cc250b2a9c4b38bb6ef45f0625990e43f20bff916c965 \
+    --hash=sha256:e646123b976bbb6707cfaacae8c926e2f886b744a60e0f410e8610a3a4eaf7be
     # via asxshorts
 safety-schemas==0.0.17 \
     --hash=sha256:4ec695d283acab16b9c24cfb5afc91d6a5d4b3812027607e676f70888805d151 \
