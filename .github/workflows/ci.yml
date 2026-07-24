@@ -37,7 +37,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install uv
           # Install project with dev extra (includes ruff, pytest, etc.)
-          uv sync --extra dev
+          uv sync --extra dev --extra pandas --extra polars
       - name: Lint (ruff)
         run: |
           uv run ruff format --check src/ tests/
