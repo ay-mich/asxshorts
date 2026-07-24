@@ -27,8 +27,6 @@ jobs:
   test:
     name: test
     runs-on: ubuntu-latest
-    # Skip CI for dependabot PRs; still runs on main after merge when paths match
-    if: github.actor != 'dependabot[bot]'
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
