@@ -382,7 +382,7 @@ def performance_monitoring():
             # Use range fetch for efficiency
             range_result = client.fetch_range(start_date, end_date)
             total_records = sum(
-                len(r.records) for r in range_result.results if r.records
+                len(r.records) for r in range_result.results.values() if r.records
             )
             print(
                 f"✅ Batch processed {total_records} records across {len(range_result.results)} days"
@@ -424,36 +424,34 @@ def performance_monitoring():
                 else:
                     print(f"   Pandas: No data available for {target_date}")
 
-            # Note: Polars processing commented out due to adapter bug
-            # with performance_monitor("Polars processing"):
-            #     polars_adapter = create_polars_adapter()
-            #     df_polars = polars_adapter.fetch_day_df(target_date)
-            #
-            #     if df_polars is not None:
-            #         # Same operations in Polars (0.05 = 5%)
-            #         result_polars = (
-            #             df_polars
-            #             .filter(
-            #                 (pl.col("percent_short").is_not_null()) &
-            #                 (pl.col("percent_short") != "-")
-            #             )
-            #             .with_columns(pl.col("percent_short").cast(pl.Float64, strict=False))
-            #             .filter(pl.col("percent_short") > 0.05)
-            #             .group_by("asx_code")
-            #             .agg([
-            #                 pl.col("percent_short").mean().alias("mean_short"),
-            #                 pl.col("percent_short").max().alias("max_short"),
-            #                 pl.col("percent_short").std().alias("std_short")
-            #             ])
-            #             .sort("mean_short", descending=True)
-            #         )
-            #         print(f"   Polars result: {len(result_polars)} processed records")
-            #     else:
-            #         print(f"   Polars: No data available for {target_date}")
+            with performance_monitor("Polars processing"):
+                polars_adapter = create_polars_adapter()
+                df_polars = polars_adapter.fetch_day_df(target_date)
 
-            print(
-                "   Note: Polars comparison temporarily disabled due to adapter implementation issue"
-            )
+                if df_polars is not None:
+                    # Same operations in Polars (0.05 = 5%)
+                    result_polars = (
+                        df_polars.filter(
+                            (pl.col("percent_short").is_not_null())
+                            & (pl.col("percent_short") != "-")
+                        )
+                        .with_columns(
+                            pl.col("percent_short").cast(pl.Float64, strict=False)
+                        )
+                        .filter(pl.col("percent_short") > 0.05)
+                        .group_by("asx_code")
+                        .agg(
+                            [
+                                pl.col("percent_short").mean().alias("mean_short"),
+                                pl.col("percent_short").max().alias("max_short"),
+                                pl.col("percent_short").std().alias("std_short"),
+                            ]
+                        )
+                        .sort("mean_short", descending=True)
+                    )
+                    print(f"   Polars result: {len(result_polars)} processed records")
+                else:
+                    print(f"   Polars: No data available for {target_date}")
 
         except Exception as e:
             print(f"❌ DataFrame comparison failed: {e}")
