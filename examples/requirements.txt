@@ -20,7 +20,7 @@ notebook>=6.4.0
 pyarrow>=10.0.0
 
 # Optional: For performance monitoring
-psutil>=5.8.0
+psutil>=7.2.2
 
 # Optional: For advanced date handling
 python-dateutil>=2.8.0
