@@ -197,9 +197,9 @@ colorama==0.4.6 \
     #   commitizen
     #   pytest
     #   tqdm
-commitizen==4.9.1 \
-    --hash=sha256:4241b2ecae97b8109af8e587c36bc3b805a09b9a311084d159098e12d6ead497 \
-    --hash=sha256:b076b24657718f7a35b1068f2083bd39b4065d250164a1398d1dac235c51753b
+commitizen==4.16.5 \
+    --hash=sha256:a953394a8625ab6e3619d7e97ffc032cac8a13c5854a12010d0a9d415cdb80ca \
+    --hash=sha256:cd80978a61bb3e0b18137da9e10d03edba0b9c184b9bc964dba8a31c42a7630c
     # via asxshorts
 coverage==7.11.0 \
     --hash=sha256:037b2d064c2f8cc8716fe4d39cb705779af3fbf1ba318dc96a1af858888c7bb5 \
@@ -351,9 +351,9 @@ defusedxml==0.7.1 \
     --hash=sha256:1bb3032db185915b62d7c6209c5a8792be6a32ab2fedacc84e01b52c51aa3e69 \
     --hash=sha256:a352e7e428770286cc899e2542b6cdaedb2b4953ff269a210103ec58f6198a61
     # via py-serializable
-deprecated==1.2.18 \
-    --hash=sha256:422b6f6d859da6f2ef57857761bfb392480502a64c3028ca9bbe86085d72115d \
-    --hash=sha256:bd5011788200372a32418f888e326a09ff80d0214bd961147cfed01b5c018eec
+deprecated==1.3.1 \
+    --hash=sha256:597bfef186b6f60181535a29fbe44865ce137a5079f295b479886c82729d5f3f \
+    --hash=sha256:b1b50e0ff0c1fddaa5708a2c6b0a6588bb09b892825ab2b214ac9ea9d92a5223
     # via commitizen
 distlib==0.4.0 \
     --hash=sha256:9659f7d87e46584a30b5780e43ac7a2143098441670ff0a49d5f9034c54a6c16 \
@@ -440,9 +440,9 @@ joblib==1.5.2 \
     --hash=sha256:3faa5c39054b2f03ca547da9b2f52fde67c06240c31853f306aea97f13647b55 \
     --hash=sha256:4e1f0bdbb987e6d843c70cf43714cb276623def372df3c22fe5266b2670bc241
     # via nltk
-keyring==25.6.0 ; platform_machine != 'ppc64le' and platform_machine != 's390x' \
-    --hash=sha256:0b39998aa941431eb3d9b0d4b2460bc773b9df6fed7621c2dfb291a7e0187a66 \
-    --hash=sha256:552a3f7af126ece7ed5c89753650eec89c7eaae8617d0aa4d9ad2b75111266bd
+keyring==25.7.0 ; platform_machine != 'ppc64le' and platform_machine != 's390x' \
+    --hash=sha256:be4a0b195f149690c166e850609a477c532ddbfbaed96a404d4e43f8d5e2689f \
+    --hash=sha256:fe01bd85eb3f8fb3dd0405defdeac9a5b4f6f0439edbb3149577f244a2e8245b
     # via twine
 license-expression==30.4.4 \
     --hash=sha256:421788fdcadb41f049d2dc934ce666626265aeccefddd25e162a26f23bcbf8a4 \
@@ -523,9 +523,9 @@ markupsafe==3.0.3 \
     # via
     #   jinja2
     #   pdoc
-marshmallow==4.0.1 \
-    --hash=sha256:72f14ef346f81269dbddee891bac547dda1501e9e08b6a809756ea3dbb7936a1 \
-    --hash=sha256:e1d860bd262737cb2d34e1541b84cb52c32c72c9474e3fe6f30f137ef8b0d97f
+marshmallow==4.3.0 \
+    --hash=sha256:46c4fe6984707e3cbd485dfebbf0a59874f58d695aad05c1668d15e8c6e13b46 \
+    --hash=sha256:fb43c53b3fe240b8f6af37223d6ef1636f927ad9bea8ab323afad95dff090880
     # via safety
 mdurl==0.1.2 \
     --hash=sha256:84008a41e51615a49fc9966191ff91509e3c40b939176e643fd50a5c2196b8f8 \
@@ -674,9 +674,9 @@ pathspec==0.12.1 \
     --hash=sha256:a0d503e138a4c123b27490a4f7beda6a01c6f288df0e4a8b79c7eb0dc7b4cc08 \
     --hash=sha256:a482d51503a1ab33b1c67a6c3813a26953dbdc71c31dacaef9a838c4e29f5712
     # via mypy
-pdoc==15.0.4 \
-    --hash=sha256:cf9680f10f5b4863381f44ef084b1903f8f356acb0d4cc6b64576ba9fb712c82 \
-    --hash=sha256:f9028e85e7bb8475b054e69bde1f6d26fc4693d25d9fa1b1ce9009bec7f7a5c4
+pdoc==16.0.0 \
+    --hash=sha256:070b51de2743b9b1a4e0ab193a06c9e6c12cf4151cf9137656eebb16e8556628 \
+    --hash=sha256:fdadc40cc717ec53919e3cd720390d4e3bcd40405cb51c4918c119447f913514
     # via asxshorts
 pip==25.3 \
     --hash=sha256:8d0538dbbd7babbd207f261ed969c65de439f6bc9e5dbd3b3b9a77f25d95f343 \
@@ -706,9 +706,9 @@ pluggy==1.6.0 \
     # via
     #   pytest
     #   pytest-cov
-pre-commit==4.3.0 \
-    --hash=sha256:2b0747ad7e6e967169136edffee14c16e148a778a54e4f967921aa1ebf2308d8 \
-    --hash=sha256:499fe450cc9d42e9d58e606262795ecb64dd05438943c62b66f6a8673da30b16
+pre-commit==4.6.1 \
+    --hash=sha256:03e809865c7d178b9979d06c761fcbfe6808fdaded8581a745bb110e52050421 \
+    --hash=sha256:0e3b2942510d1fb34eec167a3ec57331bf8442122f1153a9fb8b58f5c49b2717
     # via asxshorts
 prompt-toolkit==3.0.52 \
     --hash=sha256:28cde192929c8e7321de85de1ddbe736f1375148b02f2e17edd840042b1be855 \
@@ -838,9 +838,9 @@ pydantic-core==2.41.4 \
     --hash=sha256:f9672ab4d398e1b602feadcffcdd3af44d5f5e6ddc15bc7d15d376d47e8e19f8 \
     --hash=sha256:fc3b4cc4539e055cfa39a3763c939f9d409eb40e85813257dcd761985a108554
     # via pydantic
-pydantic-settings==2.11.0 \
-    --hash=sha256:d0e87a1c7d33593beb7194adb8470fc426e95ba02af83a0f23474a04c9a08180 \
-    --hash=sha256:fe2cea3413b9530d10f3a5875adffb17ada5c1e1bab0b2885546d7310415207c
+pydantic-settings==2.14.2 \
+    --hash=sha256:a20c97b37910b6550d5ea50fbcc2d4187defe58cd57070b73863d069419c9440 \
+    --hash=sha256:c19dd64b19097f1de80184f0cc7b0272a13ae6e170cbf240a3e27e381ed14a5f
     # via asxshorts
 pydocstyle==6.3.0 \
     --hash=sha256:118762d452a49d6b05e194ef344a55822987a462831ade91ec5c06fd2169d019 \
@@ -862,9 +862,9 @@ pyproject-hooks==1.2.0 \
     --hash=sha256:1e859bd5c40fae9448642dd871adf459e5e2084186e8d2c2a79a824c970da1f8 \
     --hash=sha256:9e5c6bfa8dcc30091c74b0cf803c81fdd29d94f01992a7707bc97babb1141913
     # via build
-pytest==8.4.2 \
-    --hash=sha256:86c0d0b93306b961d58d62a4db4879f27fe25513d4b969df351abdddb3c30e01 \
-    --hash=sha256:872f880de3fc3a5bdc88a11b39c9710c3497a547cfa9320bc3c5e62fbf272e79
+pytest==9.1.1 \
+    --hash=sha256:1088fbde8f2b49d95a549a195707afa7a76a3ce9bcadc26b6d71f0ffda5fe313 \
+    --hash=sha256:37a86b45efb9a47a61a36449063e8e18d0cab3161329fc099eb21783169c4f0c
     # via
     #   asxshorts
     #   pytest-asyncio
@@ -1134,9 +1134,9 @@ ruff==0.14.4 \
     --hash=sha256:f5e649052a294fe00818650712083cddc6cc02744afaf37202c65df9ea52efa5 \
     --hash=sha256:f911bba769e4a9f51af6e70037bb72b70b45a16db5ce73e1f72aefe6f6d62132
     # via asxshorts
-safety==3.6.2 \
-    --hash=sha256:2e148cd9a4ad2e387d2c142878b7b5a3a9cb9e6538167043faa1ba7023a032be \
-    --hash=sha256:754f8d6068d1504503b0346cbd3cb0e67015d2abc1d842f3a4e4b662cb4f44ec
+safety==3.8.1 \
+    --hash=sha256:953c1c3c60c873f53a6cc250b2a9c4b38bb6ef45f0625990e43f20bff916c965 \
+    --hash=sha256:e646123b976bbb6707cfaacae8c926e2f886b744a60e0f410e8610a3a4eaf7be
     # via asxshorts
 safety-schemas==0.0.17 \
     --hash=sha256:4ec695d283acab16b9c24cfb5afc91d6a5d4b3812027607e676f70888805d151 \
