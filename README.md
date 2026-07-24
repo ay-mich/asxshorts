@@ -6,7 +6,7 @@
 
 Lightweight Python client to download official ASIC short position daily CSVs across a date range, with local caching.
 
-👉 Examples: [asxshorts-examples](https://github.com/ay-mich/asxshorts-examples)
+👉 Examples: [examples](./examples)
 
 ## Features
 

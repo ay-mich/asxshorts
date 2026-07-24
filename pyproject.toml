@@ -141,6 +141,9 @@ ignore = [
   "RUF043",  # raw-string regex nit for pytest match
   "E712",    # avoid == False checks in tests
 ]
+"examples/**/*" = [
+  "E402", "F841", "B007", "B905", "C401", "ERA001", "SIM102", "F401", "T201"
+]
 "src/asxshorts/cli.py" = ["B008"]
 "src/asxshorts/client.py" = ["F401"]
 
