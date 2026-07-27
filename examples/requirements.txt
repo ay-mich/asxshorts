@@ -4,7 +4,7 @@ asxshorts
 # Data manipulation and analysis
 pandas>=1.5.0
 polars>=0.20.0
-numpy>=1.21.0
+numpy>=2.4.6
 
 # Visualization
 matplotlib>=3.11.1
