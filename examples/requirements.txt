@@ -14,7 +14,7 @@ plotly>=6.9.0
 # Jupyter notebook support
 ipykernel>=7.3.0
 jupyter>=1.1.1
-notebook>=7.6.1
+notebook>=7.6.2
 
 # Optional: For enhanced data processing
 pyarrow>=25.0.0
