@@ -9,7 +9,7 @@ numpy>=2.4.6
 # Visualization
 matplotlib>=3.11.1
 seaborn>=0.13.2
-plotly>=6.9.0
+plotly>=7.0.0
 
 # Jupyter notebook support
 ipykernel>=7.3.0
