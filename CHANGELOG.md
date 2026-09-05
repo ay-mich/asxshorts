@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.2] - 2026-09-05
+
+- Consolidate DataFrame conversion, record parsing, resolver HTML parsing, and CLI JSON output.
+- Remove temporary files after failed cache writes while preserving cached data and releasing locks.
+- Fix the successful-date count in CLI range output.
+- Add regression coverage for cache write failures and real pandas/Polars conversions.
+- Fix date-range iteration in examples and refresh development dependencies and CI tooling.
+
 ## [0.1.1] - 2024-01-XX
 
 - Add `http_adapter_retries` configuration flag to control urllib3 HTTPAdapter retry strategy
