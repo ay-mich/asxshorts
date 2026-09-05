@@ -321,3 +321,25 @@ def test_lock_path_generation(cache_manager):
 
     assert lock_path.name == "2024-01-15.csv.lock"
     assert lock_path.parent == cache_manager.locks_dir
+
+
+def test_failed_write_preserves_cache_and_removes_temporary_file(cache_manager):
+    """A disk error during writing must preserve cached data and release the lock."""
+    report_date = date(2024, 1, 15)
+    cache_manager.write_cached(report_date, b"previous data")
+    temporary_path = cache_manager.cache_dir / "interrupted.tmp"
+    temporary_path.touch()
+    stream = Mock()
+    stream.name = str(temporary_path)
+    stream.write.side_effect = OSError("Disk full")
+    context = Mock()
+    context.__enter__ = Mock(return_value=stream)
+    context.__exit__ = Mock(return_value=False)
+
+    with patch("tempfile.NamedTemporaryFile", return_value=context):
+        with pytest.raises(CacheError, match="Disk full"):
+            cache_manager.write_cached(report_date, b"replacement data")
+
+    assert cache_manager.read_cached(report_date) == b"previous data"
+    assert not temporary_path.exists()
+    assert not cache_manager._get_lock_path(report_date).exists()

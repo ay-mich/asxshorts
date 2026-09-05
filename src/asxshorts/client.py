@@ -136,6 +136,14 @@ class ShortsClient:
             f"Failed to fetch {url} after {self.settings.retries + 1} attempts: {last_exception}"
         )
 
+    @staticmethod
+    def _parse_records(content: bytes, report_date: date) -> list[ShortRecord]:
+        """Apply the same parsing and validation to cached and downloaded data."""
+        records = parse_csv_content(content, report_date)
+        return [
+            ShortRecord(**record) for record in validate_records(records, report_date)
+        ]
+
     def fetch_day(self, d: date, *, force: bool = False) -> FetchResult:
         """Fetch short selling data for a single day.
 
@@ -158,10 +166,7 @@ class ShortsClient:
             cached_content = self.cache.read_cached(d)
             if cached_content:
                 logger.debug(f"Using cached data for {d}")
-                records = parse_csv_content(cached_content, d)
-                validated_records = validate_records(records, d)
-                # Convert dict records to Pydantic models
-                record_models = [ShortRecord(**record) for record in validated_records]
+                record_models = self._parse_records(cached_content, d)
                 elapsed_ms = (time.perf_counter() - start_time) * 1000.0
                 return FetchResult(
                     fetch_date=d,
@@ -182,12 +187,7 @@ class ShortsClient:
         # Fetch content
         content = self._fetch_with_retry(url)
 
-        # Parse content
-        records = parse_csv_content(content, d)
-        validated_records = validate_records(records, d)
-
-        # Convert to Pydantic models
-        record_models = [ShortRecord(**record) for record in validated_records]
+        record_models = self._parse_records(content, d)
 
         # Cache the raw content
         try:

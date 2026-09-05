@@ -18,7 +18,7 @@ from typing import Any
 
 from .client import ShortsClient
 
-# Optional imports at module level (to satisfy linters while avoiding hard deps)
+# Optional dependencies are required only when their adapters are used.
 try:
     import pandas as pd  # type: ignore
 except Exception:  # pragma: no cover - environment without pandas
@@ -28,6 +28,12 @@ try:
     import polars as pl  # type: ignore
 except Exception:  # pragma: no cover - environment without polars
     pl = None  # type: ignore[assignment]
+
+
+DATE_COLUMNS = ("date", "report_date")
+INTEGER_COLUMNS = ("short_qty", "total_qty", "short_sold", "issued_shares")
+FLOAT_COLUMNS = ("short_pct", "percent_short")
+NUMERIC_COLUMNS = (*INTEGER_COLUMNS, *FLOAT_COLUMNS)
 
 
 def _clean_numeric_value(value: Any) -> Any:
@@ -51,19 +57,11 @@ def _prepare_records_for_conversion(
     by only cleaning at the conversion boundary.
     """
     cleaned_records = []
-    numeric_columns = {
-        "short_qty",
-        "total_qty",
-        "short_pct",
-        "short_sold",
-        "issued_shares",
-        "percent_short",
-    }
 
     for record in records:
         cleaned_record = {}
         for key, value in record.items():
-            if key in numeric_columns:
+            if key in NUMERIC_COLUMNS:
                 cleaned_record[key] = _clean_numeric_value(value)
             else:
                 cleaned_record[key] = value
@@ -119,41 +117,8 @@ class PandasAdapter:
         return self._records_to_dataframe(all_records)
 
     def _records_to_dataframe(self, records: list[dict[str, Any]]) -> "pd.DataFrame":
-        """Convert records to pandas DataFrame with proper types.
-
-        Supports both normalized keys from this package
-        (report_date, asx_code, company_name, short_sold, issued_shares, percent_short)
-        and legacy/example keys (date, product, short_qty, total_qty, short_pct).
-        """
-        if not records:
-            # Return empty DataFrame with expected columns
-            return self.pd.DataFrame(
-                columns=["date", "product", "short_qty", "total_qty", "short_pct"]
-            )
-
-        # Apply consistent data cleaning
-        cleaned_records = _prepare_records_for_conversion(records)
-        df = self.pd.DataFrame(cleaned_records)
-
-        # Convert date columns
-        if "date" in df.columns:
-            df["date"] = self.pd.to_datetime(df["date"], errors="coerce")
-        if "report_date" in df.columns:
-            df["report_date"] = self.pd.to_datetime(df["report_date"], errors="coerce")
-
-        # Convert numeric columns (now pre-cleaned, so errors='coerce' handles remaining edge cases)
-        for col in (
-            "short_qty",
-            "total_qty",
-            "short_pct",
-            "short_sold",
-            "issued_shares",
-            "percent_short",
-        ):
-            if col in df.columns:
-                df[col] = self.pd.to_numeric(df[col], errors="coerce")
-
-        return df
+        """Convert records using the shared conversion helper."""
+        return to_pandas(records)
 
 
 class PolarsAdapter:
@@ -203,70 +168,13 @@ class PolarsAdapter:
         return self._records_to_dataframe(all_records)
 
     def _records_to_dataframe(self, records: list[dict[str, Any]]) -> "pl.DataFrame":
-        """Convert records to polars DataFrame with proper types.
+        """Convert records using the shared conversion helper."""
+        return to_polars(records)
 
-        Supports both normalized keys and legacy/example keys.
-        Uses the same data cleaning logic as pandas adapter for consistency.
-        """
-        if not records:
-            # Return empty DataFrame with expected schema
-            return self.pl.DataFrame(
-                schema={
-                    "date": self.pl.Date,
-                    "product": self.pl.Utf8,
-                    "short_qty": self.pl.Int64,
-                    "total_qty": self.pl.Int64,
-                    "short_pct": self.pl.Float64,
-                }
-            )
 
-        # Apply consistent data cleaning (same as pandas)
-        cleaned_records = _prepare_records_for_conversion(records)
-
-        # Convert to DataFrame - polars handles None values gracefully
-        df = self.pl.DataFrame(cleaned_records)
-
-        # Build type conversion expressions for existing columns
-        exprs: list[pl.Expr] = []
-
-        # Date columns - check if they need conversion or are already dates
-        if "date" in df.columns:
-            # Check if it's already a date type or needs string conversion
-            if df.schema["date"] == self.pl.Date:
-                # Already a date, keep as-is
-                pass
-            else:
-                # Convert from string
-                exprs.append(self.pl.col("date").str.to_date())
-        if "report_date" in df.columns:
-            # Check if it's already a date type or needs string conversion
-            if df.schema["report_date"] == self.pl.Date:
-                # Already a date, keep as-is
-                pass
-            else:
-                # Convert from string
-                exprs.append(self.pl.col("report_date").str.to_date())
-
-        # Numeric columns (pre-cleaned, so cast with strict=False for safety)
-        if "short_qty" in df.columns:
-            exprs.append(self.pl.col("short_qty").cast(self.pl.Int64, strict=False))
-        if "total_qty" in df.columns:
-            exprs.append(self.pl.col("total_qty").cast(self.pl.Int64, strict=False))
-        if "short_pct" in df.columns:
-            exprs.append(self.pl.col("short_pct").cast(self.pl.Float64, strict=False))
-        if "short_sold" in df.columns:
-            exprs.append(self.pl.col("short_sold").cast(self.pl.Int64, strict=False))
-        if "issued_shares" in df.columns:
-            exprs.append(self.pl.col("issued_shares").cast(self.pl.Int64, strict=False))
-        if "percent_short" in df.columns:
-            exprs.append(
-                self.pl.col("percent_short").cast(self.pl.Float64, strict=False)
-            )
-
-        if exprs:
-            df = df.with_columns(exprs)
-
-        return df
+def _normalize_records(data: list[Any]) -> list[dict[str, Any]]:
+    """Accept model instances and dictionaries without modifying either."""
+    return [item.model_dump() if hasattr(item, "model_dump") else item for item in data]
 
 
 def to_pandas(
@@ -282,13 +190,7 @@ def to_pandas(
             "pandas is required for to_pandas. Install with: pip install 'asxshorts[pandas]'"
         )
 
-    # Normalize input items into dicts
-    normalized: list[dict[str, Any]] = []
-    for item in data:
-        if hasattr(item, "model_dump"):
-            normalized.append(item.model_dump())
-        else:
-            normalized.append(item)  # type: ignore[arg-type]
+    normalized = _normalize_records(data)
 
     # Use the same logic as PandasAdapter
     if not normalized:
@@ -300,21 +202,10 @@ def to_pandas(
     cleaned_records = _prepare_records_for_conversion(normalized)
     df = pd.DataFrame(cleaned_records)
 
-    # Convert date columns
-    if "date" in df.columns:
-        df["date"] = pd.to_datetime(df["date"], errors="coerce")
-    if "report_date" in df.columns:
-        df["report_date"] = pd.to_datetime(df["report_date"], errors="coerce")
-
-    # Convert numeric columns
-    for col in (
-        "short_qty",
-        "total_qty",
-        "short_pct",
-        "short_sold",
-        "issued_shares",
-        "percent_short",
-    ):
+    for col in DATE_COLUMNS:
+        if col in df.columns:
+            df[col] = pd.to_datetime(df[col], errors="coerce")
+    for col in NUMERIC_COLUMNS:
         if col in df.columns:
             df[col] = pd.to_numeric(df[col], errors="coerce")
     return df  # type: ignore[return-value]
@@ -331,13 +222,7 @@ def to_polars(data: list[dict[str, Any]] | list[Any]) -> "pl.DataFrame":
             "polars is required for to_polars. Install with: pip install 'asxshorts[polars]'"
         )
 
-    # Normalize input items into dicts
-    normalized: list[dict[str, Any]] = []
-    for item in data:
-        if hasattr(item, "model_dump"):
-            normalized.append(item.model_dump())
-        else:
-            normalized.append(item)  # type: ignore[arg-type]
+    normalized = _normalize_records(data)
 
     # Use the same logic as PolarsAdapter
     if not normalized:
@@ -355,36 +240,14 @@ def to_polars(data: list[dict[str, Any]] | list[Any]) -> "pl.DataFrame":
     cleaned_records = _prepare_records_for_conversion(normalized)
     df = pl.DataFrame(cleaned_records)
 
-    # Build type conversion expressions
     exprs: list[pl.Expr] = []
-    if "date" in df.columns:
-        # Check if it's already a date type or needs string conversion
-        if df.schema["date"] == pl.Date:
-            # Already a date, keep as-is
-            pass
-        else:
-            # Convert from string
-            exprs.append(pl.col("date").str.to_date())
-    if "report_date" in df.columns:
-        # Check if it's already a date type or needs string conversion
-        if df.schema["report_date"] == pl.Date:
-            # Already a date, keep as-is
-            pass
-        else:
-            # Convert from string
-            exprs.append(pl.col("report_date").str.to_date())
-    if "short_qty" in df.columns:
-        exprs.append(pl.col("short_qty").cast(pl.Int64, strict=False))
-    if "total_qty" in df.columns:
-        exprs.append(pl.col("total_qty").cast(pl.Int64, strict=False))
-    if "short_pct" in df.columns:
-        exprs.append(pl.col("short_pct").cast(pl.Float64, strict=False))
-    if "short_sold" in df.columns:
-        exprs.append(pl.col("short_sold").cast(pl.Int64, strict=False))
-    if "issued_shares" in df.columns:
-        exprs.append(pl.col("issued_shares").cast(pl.Int64, strict=False))
-    if "percent_short" in df.columns:
-        exprs.append(pl.col("percent_short").cast(pl.Float64, strict=False))
+    for col in DATE_COLUMNS:
+        if col in df.columns and df.schema[col] != pl.Date:
+            exprs.append(pl.col(col).str.to_date())
+    for columns, dtype in ((INTEGER_COLUMNS, pl.Int64), (FLOAT_COLUMNS, pl.Float64)):
+        for col in columns:
+            if col in df.columns:
+                exprs.append(pl.col(col).cast(dtype, strict=False))
 
     if exprs:
         df = df.with_columns(exprs)
