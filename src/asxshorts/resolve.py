@@ -284,30 +284,8 @@ class CompositeResolver:
     def _parse_html_for_date(
         self, html: str, date_patterns: list[str], base_url: str
     ) -> str | None:
-        """Parse HTML content to find CSV links for target date."""
-        # Look for CSV links containing any of our date patterns
-        csv_link_pattern = r'href=["\']([^"\']*\.csv[^"\']*)["\']'
-        csv_links = re.findall(csv_link_pattern, html, re.IGNORECASE)
-
-        for link in csv_links:
-            for date_pattern in date_patterns:
-                if date_pattern in link:
-                    # Convert relative URLs to absolute
-                    if link.startswith("http"):
-                        return str(link)
-                    else:
-                        return str(urljoin(base_url, link))
-
-        # Also try looking for date patterns in link text
-        for date_pattern in date_patterns:
-            # Pattern to find links with date in the text
-            text_pattern = rf'<a[^>]*href=["\']([^"\']*)["\'][^>]*>[^<]*{re.escape(date_pattern)}[^<]*</a>'
-            matches = re.findall(text_pattern, html, re.IGNORECASE)
-            for match in matches:
-                if match.endswith(".csv") or "csv" in match.lower():
-                    return str(urljoin(base_url, match))
-
-        return None
+        """Delegate HTML parsing to the fallback resolver."""
+        return self.default._parse_html_for_date(html, date_patterns, base_url)
 
 
 class ConfigurableResolver:

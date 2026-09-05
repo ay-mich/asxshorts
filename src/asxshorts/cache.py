@@ -102,6 +102,7 @@ class CacheManager:
         if not self._acquire_lock(d):
             raise CacheError(f"Failed to acquire lock for caching {d}")
 
+        tmp_path: Path | None = None
         try:
             cache_path = self._get_cache_path(d)
 
@@ -109,18 +110,18 @@ class CacheManager:
             with tempfile.NamedTemporaryFile(
                 dir=self.cache_dir, delete=False, suffix=".tmp"
             ) as tmp_file:
+                tmp_path = Path(tmp_file.name)
                 tmp_file.write(content)
-                tmp_path = tmp_file.name
 
             # Atomic move
-            Path(tmp_path).rename(cache_path)
+            tmp_path.rename(cache_path)
             logger.debug(f"Cached data for {d} ({len(content)} bytes)")
 
         except OSError as e:
             # Clean up temp file if it exists
-            if "tmp_path" in locals():
+            if tmp_path is not None:
                 with contextlib.suppress(OSError):
-                    Path(tmp_path).unlink()
+                    tmp_path.unlink()
             raise CacheError(f"Failed to write cache for {d}: {e}") from e
         finally:
             self._release_lock(d)
@@ -156,9 +157,7 @@ class CacheManager:
                 try:
                     name = f.stem  # 'YYYY-MM-DD'
                     year, month, day = name.split("-")
-                    from datetime import date as _date
-
-                    d = _date(int(year), int(month), int(day))
+                    d = date(int(year), int(month), int(day))
                     if oldest_date is None or d < oldest_date:
                         oldest_date = d
                     if newest_date is None or d > newest_date:

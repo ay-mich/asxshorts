@@ -6,6 +6,7 @@ import traceback
 from datetime import date, timedelta
 from importlib.metadata import version as get_version
 from pathlib import Path
+from typing import Any
 
 import typer
 from dateutil.parser import parse as parse_date
@@ -44,6 +45,17 @@ def setup_logging(verbose: bool = False) -> None:
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
         datefmt="%Y-%m-%d %H:%M:%S",
     )
+
+
+def _write_json(data: dict[str, Any], output: Path | None) -> None:
+    """Serialize command results consistently to a file or stdout."""
+    if output is None:
+        typer.echo(json.dumps(data, indent=2, default=str))
+        return
+    output.parent.mkdir(parents=True, exist_ok=True)
+    with output.open("w", encoding="utf-8") as stream:
+        json.dump(data, stream, indent=2, default=str)
+    typer.echo(f"✓ Saved to {output}")
 
 
 @app.command()
@@ -101,15 +113,7 @@ def fetch(
             "records": [record.model_dump() for record in result.records],
         }
 
-        # Output results
-        if output:
-            output.parent.mkdir(parents=True, exist_ok=True)
-            with output.open("w") as f:
-                json.dump(output_data, f, indent=2, default=str)
-            typer.echo(f"✓ Saved to {output}")
-        else:
-            # Print to stdout
-            print(json.dumps(output_data, indent=2, default=str))
+        _write_json(output_data, output)
 
     except NotFoundError as e:
         typer.echo(f"✗ No data found for {target_date}", err=True)
@@ -174,7 +178,7 @@ def fetch_range(
         result = client.fetch_range(start, end, force=force)
 
         typer.echo(
-            f"✓ Found {result.total_records} total records across {result.successful_dates} dates"
+            f"✓ Found {result.total_records} total records across {len(result.successful_dates)} dates"
         )
         if result.failed_dates:
             typer.echo(
@@ -198,10 +202,10 @@ def fetch_range(
 
         # Convert to JSON-serializable format
         all_records = []
-        for date, fetch_result in result.results.items():
+        for report_date, fetch_result in result.results.items():
             for record in fetch_result.records:
                 record_dict = record.model_dump()
-                record_dict["date"] = date.isoformat()
+                record_dict["date"] = report_date.isoformat()
                 all_records.append(record_dict)
 
         output_data = {
@@ -213,15 +217,7 @@ def fetch_range(
             "records": all_records,
         }
 
-        # Output results
-        if output:
-            output.parent.mkdir(parents=True, exist_ok=True)
-            with output.open("w") as f:
-                json.dump(output_data, f, indent=2, default=str)
-            typer.echo(f"✓ Saved to {output}")
-        else:
-            # Print to stdout
-            print(json.dumps(output_data, indent=2, default=str))
+        _write_json(output_data, output)
 
     except FetchError as e:
         typer.echo(f"✗ Fetch failed: {e}", err=True)
