@@ -1702,9 +1702,9 @@ typer==0.27.3 \
     # via
     #   asxshorts
     #   safety
-types-python-dateutil==2.9.0.20261029 \
-    --hash=sha256:3258b491686c441d8074cfc8712308741900c9ff128a06421baec3767c503511 \
-    --hash=sha256:8fd04c6e1722d2523a74d6670596fc0007077651465b686f144ae1d200dcacf5
+types-python-dateutil==2.9.0.20261104 \
+    --hash=sha256:5d0495702a5f7343741f5d842c531bcd1c941da8b4a85307d52ef43ba80252db \
+    --hash=sha256:f6ee76c91c547716b4795373a53d4c07e8e06cf98384ecb89fcf134d212de2ad
     # via asxshorts
 types-requests==2.33.0.20261006 \
     --hash=sha256:0652999e9306aea345f40732d58fa49a7f6cade6a0d74d92119c5c8d82eddaf0 \
